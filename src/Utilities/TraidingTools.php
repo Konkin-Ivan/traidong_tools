@@ -1,6 +1,6 @@
 <?php
 
-namespace Konkin;
+namespace Konkin\Utilities;
 
 class TraidingTools
 {
@@ -49,5 +49,36 @@ class TraidingTools
         }
 
         return $ema;
+    }
+
+    public function traiderRsi(array $prices, int $period = 14): array
+    {
+        $rsi = [];
+        $gains = [];
+        $losses = [];
+
+        for ($i = 1; $i < count($prices); $i++) {
+            $change = $prices[$i] - $prices[$i - 1];
+            if ($change > 0) {
+                $gains[] = $change;
+                $losses[] = 0;
+            } elseif ($change < 0) {
+                $gains[] = 0;
+                $losses[] = abs($change);
+            } else {
+                $gains[] = 0;
+                $losses[] = 0;
+            }
+        }
+
+        for ($i = $period; $i < count($prices); $i++) {
+            $avgGain = array_sum(array_slice($gains, $i - $period, $period)) / $period;
+            $avgLoss = array_sum(array_slice($losses, $i - $period, $period)) / $period;
+
+            $rs = $avgGain / $avgLoss;
+            $rsi[] = 100 - (100 / (1 + $rs));
+        }
+
+        return $rsi;
     }
 }
