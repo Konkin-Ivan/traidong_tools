@@ -1,0 +1,28 @@
+{
+  "name": "konkin/traiding_tools",
+  "description": "Trading Features",
+  "license": "MIT",
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "authors": [
+    {
+      "name": "Konkin",
+      "email": "konkin.ivan@yandex.ru"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Konkin-Ivan/traiding_tools"
+    }
+  ],
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Konkin\\": "src/"
+    }
+  }
+}
