@@ -7,9 +7,9 @@ use Konkin\Utilities\TraidingTools;
 
 class RsiIndicator implements IndicatorInterface
 {
-    public function getSignal(array $data): string
+    public function getSignal(array $data): array
     {
         $traidingTools = new TraidingTools();
-        return $traidingTools->traiderRsi();
+        return $traidingTools->traiderRsi($data);
     }
 }
