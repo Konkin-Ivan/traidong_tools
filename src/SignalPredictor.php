@@ -21,15 +21,7 @@ class SignalPredictor
         $signals = $this->calculateSignals();
 
         // Подсчет количества сигналов "купить" и "продажа" с учетом силы сигналов
-        $buyScore = 0;
-        $sellScore = 0;
-        foreach ($signals as $signal) {
-            if ((int)$signal === BUY) {
-                $buyScore += 1;
-            } elseif ((int)$signal === SELL) {
-                $sellScore += 1;
-            }
-        }
+        list($buyScore, $sellScore) = $this->summarizeTradingSignals($signals);;
 
         // Если больше сигналов "купить" чем "продажа", возвращаем "купить"
         // Если больше "продажа" чем "купить", возвращаем "продажа"
@@ -55,5 +47,19 @@ class SignalPredictor
         }
 
         return $signals;
+    }
+
+    private function summarizeTradingSignals($signals): array
+    {
+        $buyScore = 0;
+        $sellScore = 0;
+        foreach ($signals as $signal) {
+            if ((int)$signal === BUY) {
+                $buyScore += 1;
+            } elseif ((int)$signal === SELL) {
+                $sellScore += 1;
+            }
+        }
+        return [$buyScore, $sellScore];
     }
 }
