@@ -1,11 +1,14 @@
 <?php
 
 namespace Konkin;
-
+const BUY = 1;
+const SELL = -1;
+const HOLD = 0;
 class SignalPredictor
 {
     private array $indicators;
     private array $data;
+
     public function __construct(array $indicators, array $data)
     {
         $this->indicators = $indicators;
@@ -14,21 +17,32 @@ class SignalPredictor
 
     public function convergeIndicators(): string
     {
+
         $signals = $this->calculateSignals();
-        
-        // Подсчет количества сигналов "купить" и "продажа"
-        $buyCount = array_count_values($signals)['купить'] ?? 0;
-        $sellCount = array_count_values($signals)['продажа'] ?? 0;
+
+        // Подсчет количества сигналов "купить" и "продажа" с учетом силы сигналов
+        $buyScore = 0;
+        $sellScore = 0;
+        foreach ($signals as $signal) {
+            if ((int)$signal === BUY) {
+                $buyScore += 1;
+            } elseif ((int)$signal === SELL) {
+                $sellScore += 1;
+            }
+        }
 
         // Если больше сигналов "купить" чем "продажа", возвращаем "купить"
         // Если больше "продажа" чем "купить", возвращаем "продажа"
         // Если сигналы равны или нет определенного сигнала, возвращаем "ничьего"
-        if ($buyCount > $sellCount) {
-            return 'купить';
-        } elseif ($sellCount > $buyCount) {
-            return 'продажа';
+        if ($buyScore > $sellScore) {
+            echo 'купить';
+            return BUY;
+        } elseif ($sellScore > $buyScore) {
+            echo 'продажа';
+            return SELL;
         } else {
-            return 'ничьего';
+            echo 'ничего';
+            return HOLD;
         }
     }
 
@@ -36,8 +50,10 @@ class SignalPredictor
     {
         $signals = [];
         foreach ($this->indicators as $indicator) {
-            $signals[] = $indicator->getSignal($this->data);
+            $signal = $indicator->getSignal($this->data);
+            $signals[] = $signal;
         }
+
         return $signals;
     }
 }

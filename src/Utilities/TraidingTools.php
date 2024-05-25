@@ -53,21 +53,18 @@ class TraidingTools
 
     public function traiderRsi(array $prices, int $period = 14): array
     {
-        $rsi = [];
         $gains = [];
         $losses = [];
+        $rsi = [];
 
         for ($i = 1; $i < count($prices); $i++) {
             $change = $prices[$i] - $prices[$i - 1];
             if ($change > 0) {
                 $gains[] = $change;
                 $losses[] = 0;
-            } elseif ($change < 0) {
-                $gains[] = 0;
-                $losses[] = abs($change);
             } else {
                 $gains[] = 0;
-                $losses[] = 0;
+                $losses[] = abs($change);
             }
         }
 

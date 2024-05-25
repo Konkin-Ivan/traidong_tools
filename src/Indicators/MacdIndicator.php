@@ -4,13 +4,16 @@ namespace Konkin\Indicators;
 
 use Konkin\IndicatorInterface;
 use Konkin\Utilities\TraidingTools;
+use const Konkin\BUY;
+use const Konkin\HOLD;
+use const Konkin\SELL;
 
 class MacdIndicator implements IndicatorInterface
 {
     public function getSignal(array $data): string
     {
-        // Assuming TraidingTools::traiderMacd() exists and returns an array with 'macd', 'signal', and 'histogram' keys
         $result = (new TraidingTools)->traiderMacd($data);
+
         $macdValues = $result['macd'];
         $signalValues = $result['signal'];
         $histogramValues = $result['histogram'];
@@ -27,13 +30,13 @@ class MacdIndicator implements IndicatorInterface
         }
 
         if (!empty($buySignals)) {
-            return 'MACD пересек сигнальную линию, сигнал на покупку: ' . implode(', ', $buySignals);
+            return BUY;
         }
 
         if (!empty($sellSignals)) {
-            return 'MACD пересек ниже сигнальной линии, сигнал на продажу: ' . implode(', ', $sellSignals);
+            return SELL;
         }
 
-        return 'Нет сигналов';
+        return HOLD;
     }
 }
